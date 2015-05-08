@@ -101,7 +101,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 1:
+    if len(sys.argv) <= 1:
         print "jrun.py rootdir run-args"
         sys.exit(1)
 
