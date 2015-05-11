@@ -1,6 +1,7 @@
-# super quick command line builds
-# hack hack hackity hack
+#!/usr/bin/python
 
+# super quick command line builds and source dir nav
+# hack hack hackity hack
 import sys
 import datetime
 import os
@@ -9,13 +10,13 @@ import shutil
 import shlex
 
 def run_command(command):
-    print command
     p = subprocess.Popen(shlex.split(command),
                          cwd=os.getcwd(),
                          env={"PATH": os.getenv("PATH")},
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
     return iter(p.stdout.readline, b'')
+
 
 def get_main_class(f):
     package = ""
@@ -28,6 +29,7 @@ def get_main_class(f):
             class_ = c[c.index("class ")+6:].replace("{","").replace(" ","")
     return package + "." + class_
 
+
 def build_manifest(main_class, class_path_string, manifest_filename):
     f = open(manifest_filename, "w")
     f.write("Manifest-Version: 1.0\n")
@@ -35,7 +37,24 @@ def build_manifest(main_class, class_path_string, manifest_filename):
     f.write("Class-Path:" + class_path_string + "\n")
     f.close()
 
+
+def find_main():
+    cl = "find . -name '*.java' -exec grep -l \"void main\" \"{}\" +"
+    result = run_command(cl).next().strip()
+    return result
+
+
 def main(argv):
+    if argv[1] == "main":
+        result = find_main()
+        print os.path.dirname(result)
+        sys.exit(0)
+
+    if argv[1] == "vim":
+        result = find_main()
+        print result
+        sys.exit(0)
+
     # find all the jar files
     directory = argv[1]
     out_dir = "out/tmp"
@@ -102,7 +121,9 @@ def main(argv):
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
-        print "jrun.py rootdir run-args"
+        print "jhelp.py rootdir run-args"
+        print "jhelp.py main  ** finds the first directory with main() method"
+        print "jhelp.py vim   ** finds the first file with main() method"
         sys.exit(1)
 
     main(sys.argv)

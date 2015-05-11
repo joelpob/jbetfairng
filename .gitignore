@@ -34,3 +34,7 @@ proguard/
 *.ipr
 *.iws
 .idea/
+
+certs/
+src/com/jbetfairng/Main.java
+Main.java
