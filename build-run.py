@@ -30,11 +30,13 @@ def get_main_class(f):
     return package + "." + class_
 
 
-def build_manifest(main_class, class_path_string, manifest_filename):
+def build_manifest(main_class, class_path_string, resources_dir, manifest_filename):
+    if len(resources_dir) > 0 and "\n" not in resources_dir:
+        resources_dir = resources_dir + "\n"
     f = open(manifest_filename, "w")
     f.write("Manifest-Version: 1.0\n")
     f.write("Main-Class: " + main_class + "\n")
-    f.write("Class-Path:" + class_path_string + "\n")
+    f.write("Class-Path: " + resources_dir + class_path_string + "\n")
     f.close()
 
 
@@ -64,6 +66,7 @@ def main(argv):
 
     jar_files = []
     source_files = []
+    resource_files = []
     for root, dirs, files in os.walk(directory):
         for file in files:
             if not out_dir in file and file.endswith(".jar"):
@@ -72,6 +75,10 @@ def main(argv):
             if not out_dir in file and file.endswith(".java"):
                 f = os.path.join(root, file)
                 source_files.append(f)
+            if not out_dir in file and "resources/" in os.path.join(root, file):
+                f = os.path.join(root, file)
+                resource_files.append(f)
+                print "found resource: " + f
 
     for jar in jar_files:
         print "including: " + jar
@@ -95,13 +102,18 @@ def main(argv):
     for f in jar_files:
         shutil.copy2(f, out_dir + "/deps")
 
+    # copy over resources
+    os.mkdir(out_dir + "/resources")
+    for f in resource_files:
+        shutil.copy2(f, out_dir + "/resources")
+
     class_path_jar = ""
     for root, dirs, files in os.walk(out_dir + "/deps"):
         for f in files:
             class_path_jar += "  deps/" + f.strip() + "\n"
 
     # build manifest
-    build_manifest(main_class, class_path_jar, out_dir + "/MANIFEST.MF")
+    build_manifest(main_class, class_path_jar, "resources/", out_dir + "/MANIFEST.MF")
 
     dirs = [o for o in os.listdir(out_dir) if os.path.isdir(os.path.join(out_dir,o))]
     cls_dir = next(i for i in dirs if not i is "deps")

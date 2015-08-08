@@ -80,7 +80,13 @@ public class Network {
         call.id = 1;
 
         String requestData = new Gson().toJson(call);
-        String result = RequestSync(url, requestData, ContentType.APPLICATION_JSON, appKey, sessionToken);
+        String result = requestSync(
+                url,
+                requestData,
+                ContentType.APPLICATION_JSON,
+                "application/json",
+                appKey,
+                sessionToken);
 
         Gson gson = new Gson();
         Type typeToken = new TypeToken<JsonResponse<T>>() { }.getType();
@@ -91,7 +97,7 @@ public class Network {
                     entity.result,
                     DateTime.now(),
                     requestStart,
-                    (requestStartMillis - System.currentTimeMillis()) / 1000,
+                    (System.currentTimeMillis() - requestStartMillis) / 1000,
                     entity.hasError);
             return response;
         }
@@ -100,14 +106,51 @@ public class Network {
                     null,
                     DateTime.now(),
                     requestStart,
-                    (requestStartMillis - System.currentTimeMillis()) / 1000,
+                    (System.currentTimeMillis() - requestStartMillis) / 1000,
                     true);
     }
 
-    private String RequestSync(
+    public BetfairServerResponse<KeepAliveResponse> keepAliveSynchronous() {
+        DateTime requestStart = DateTime.now();
+        long requestStartMillis = System.currentTimeMillis();
+
+        String keepAliveResponse = this.requestSync(
+                "https://identitysso.betfair.com/api/keepAlive",
+                "",
+                ContentType.APPLICATION_FORM_URLENCODED,
+                "application/json",
+                this.appKey,
+                this.sessionToken);
+
+        Gson gson = new Gson();
+        Type typeToken = new TypeToken<KeepAliveResponse>() { }.getType();
+        KeepAliveResponse entity = gson.fromJson(keepAliveResponse, typeToken);
+        if (entity != null) {
+            BetfairServerResponse<KeepAliveResponse> response = new BetfairServerResponse<>(
+                    entity,
+                    DateTime.now(),
+                    requestStart,
+                    (System.currentTimeMillis() - requestStartMillis) / 1000,
+                    Boolean.parseBoolean(entity.error));
+            return response;
+        }
+        else {
+            KeepAliveResponse response = new KeepAliveResponse();
+            response.error = "Keep Alive request failed.";
+            return new BetfairServerResponse<>(
+                    response,
+                    DateTime.now(),
+                    requestStart,
+                    (System.currentTimeMillis() - requestStartMillis) / 1000,
+                    true);
+        }
+    }
+
+    private String requestSync(
             String url,
             String requestPostData,
             ContentType contentType,
+            String acceptType,
             String appKey,
             String sessionToken)
     {
@@ -115,7 +158,8 @@ public class Network {
                 new BasicHeader("X-Application", appKey),
                 new BasicHeader("X-Authentication", sessionToken),
                 new BasicHeader("Cache-Control", "no-cache"),
-                new BasicHeader("Pragma", "no-cache")
+                new BasicHeader("Pragma", "no-cache"),
+                new BasicHeader("Accept", acceptType)
         };
 
         CloseableHttpClient client = HttpClientBuilder.create()
@@ -123,9 +167,11 @@ public class Network {
                 .build();
         try {
             StringEntity entity = new StringEntity(requestPostData);
+            entity.setContentType(contentType.toString());
             HttpPost post = new HttpPost(url);
             post.setEntity(entity);
             HttpResponse response = client.execute(post);
+
             String json = EntityUtils.toString(response.getEntity(), "UTF-8");
             return json;
         }
@@ -135,7 +181,7 @@ public class Network {
         }
     }
 
-    private Observable<String> Request(
+    private Observable<String> request(
             String url,
             String requestPostData,
             ContentType contentType,

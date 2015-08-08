@@ -106,5 +106,7 @@ public class BetfairClient {
         }
     }
 
-
+    public BetfairServerResponse<KeepAliveResponse> keepAlive() {
+        return networkClient.keepAliveSynchronous();
+    }
 }
