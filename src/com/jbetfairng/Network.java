@@ -1,7 +1,10 @@
 package com.jbetfairng;
 
+import com.google.common.reflect.TypeParameter;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+//import com.google.gson.reflect.TypeToken;
+import com.jbetfairng.entities.EventResult;
+import com.jbetfairng.entities.EventType;
 import com.jbetfairng.enums.Endpoint;
 import com.jbetfairng.enums.Exchange;
 import org.apache.http.Header;
@@ -30,7 +33,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import com.google.common.reflect.TypeToken;
+import com.google.common.reflect.TypeParameter;
 
 public class Network {
 
@@ -51,7 +57,7 @@ public class Network {
     }
 
     public <T> BetfairServerResponse<T> Invoke(
-            Class<T> entityClass,
+            TypeToken<T> elementClass,
             Exchange exchange,
             Endpoint endpoint,
             String method,
@@ -89,8 +95,12 @@ public class Network {
                 sessionToken);
 
         Gson gson = new Gson();
-        Type typeToken = new TypeToken<JsonResponse<T>>() { }.getType();
-        JsonResponse<T> entity = gson.fromJson(result, typeToken);
+
+        Type underlyingType = new TypeToken<JsonResponse<T>>() { }
+                .where(new TypeParameter<T>() { }, elementClass)
+                .getType();
+
+        JsonResponse<T> entity = gson.fromJson(result, underlyingType);
         // should be returning Observable<Betfair...> here.
         if (entity != null) {
             BetfairServerResponse<T> response = new BetfairServerResponse<T>(

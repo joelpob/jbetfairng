@@ -24,10 +24,11 @@ def get_main_class(f):
     for line in f:
         if "package " in line:
             package = line.replace("package ", "").replace(";", "").strip()
+            package = package + "."
         if "class " in line:
             c = line
             class_ = c[c.index("class ")+6:].replace("{","").replace(" ","")
-    return package + "." + class_
+    return package + class_
 
 
 def build_manifest(main_class, class_path_string, resources_dir, manifest_filename):
@@ -60,6 +61,8 @@ def main(argv):
     # find all the jar files
     directory = argv[1]
     out_dir = "out/tmp"
+    if not os.path.exists("out"):
+        os.mkdir("out")
     if os.path.exists(out_dir):
         shutil.rmtree(out_dir)
     os.mkdir(out_dir)
@@ -117,8 +120,9 @@ def main(argv):
 
     dirs = [o for o in os.listdir(out_dir) if os.path.isdir(os.path.join(out_dir,o))]
     cls_dir = next(i for i in dirs if not i is "deps")
+    local_classes = [f for f in os.listdir(out_dir) if f.endswith(".class")]
 
-    cl = "jar -cvfm %s.jar MANIFEST.MF %s" % (main_class, cls_dir)
+    cl = "jar -cvfm %s.jar MANIFEST.MF %s %s" % (main_class, cls_dir, " ".join(local_classes))
     print cl
     process = subprocess.Popen(shlex.split(cl), cwd=out_dir, env={'PATH': os.getenv("PATH")})
     process.wait()

@@ -1,9 +1,13 @@
 package com.jbetfairng;
 
+import com.jbetfairng.entities.Competition;
+import com.jbetfairng.entities.CompetitionResult;
+import com.jbetfairng.entities.EventResult;
+import com.jbetfairng.entities.MarketFilter;
 import com.google.gson.Gson;
+import com.jbetfairng.enums.Endpoint;
 import com.jbetfairng.enums.Exchange;
 import com.jbetfairng.exceptions.LoginException;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +15,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import java.util.HashMap;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -18,6 +24,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.Map;
+import com.google.common.reflect.TypeToken;
+import com.google.common.reflect.TypeParameter;
 
 public class BetfairClient {
 
@@ -26,6 +35,59 @@ public class BetfairClient {
     private String appKey;
     private String sessionToken;
     private Logger tracer;
+
+    private static String LIST_COMPETITIONS_METHOD = "SportsAPING/v1.0/listCompetitions";
+    private static String LIST_COUNTRIES_METHOD = "SportsAPING/v1.0/listCountries";
+    private static String LIST_CURRENT_ORDERS_METHOD = "SportsAPING/v1.0/listCurrentOrders";
+    private static String LIST_CLEARED_ORDERS_METHOD = "SportsAPING/v1.0/listClearedOrders";
+    private static String LIST_EVENT_TYPES_METHOD = "SportsAPING/v1.0/listEventTypes";
+    private static String LIST_MARKET_CATALOGUE_METHOD = "SportsAPING/v1.0/listMarketCatalogue";
+    private static String LIST_MARKET_BOOK_METHOD = "SportsAPING/v1.0/listMarketBook";
+    private static String LIST_MARKET_PROFIT_AND_LOSS = "SportsAPING/v1.0/listMarketProfitAndLoss";
+    private static String LIST_MARKET_TYPES = "SportsAPING/v1.0/listMarketTypes";
+    private static String LIST_TIME_RANGES = "SportsAPING/v1.0/listTimeRanges";
+    private static String LIST_VENUES = "SportsAPING/v1.0/listVenues";
+    private static String PLACE_ORDERS_METHOD = "SportsAPING/v1.0/placeOrders";
+    private static String CANCEL_ORDERS_METHOD = "SportsAPING/v1.0/cancelOrders";
+    private static String REPLACE_ORDERS_METHOD = "SportsAPING/v1.0/replaceOrders";
+    private static String UPDATE_ORDERS_METHOD = "SportsAPING/v1.0/updateOrders";
+
+    private static String FILTER = "filter";
+    private static String BET_IDS = "betIds";
+    private static String RUNNER_IDS = "runnerIds";
+    private static String SIDE = "side";
+    private static String SETTLED_DATE_RANGE = "settledDateRange";
+    private static String EVENT_TYPE_IDS = "eventTypeIds";
+    private static String EVENT_IDS = "eventIds";
+    private static String BET_STATUS = "betStatus";
+    private static String PLACED_DATE_RANGE = "placedDateRange";
+    private static String DATE_RANGE = "dateRange";
+    private static String ORDER_BY = "orderBy";
+    private static String GROUP_BY = "groupBy";
+    private static String SORT_DIR = "sortDir";
+    private static String FROM_RECORD = "fromRecord";
+    private static String RECORD_COUNT = "recordCount";
+    private static String GRANULARITY = "granularity";
+    private static String MARKET_PROJECTION = "marketProjection";
+    private static String MATCH_PROJECTION = "matchProjection";
+    private static String ORDER_PROJECTION = "orderProjection";
+    private static String PRICE_PROJECTION = "priceProjection";
+    private static String SORT = "sort";
+    private static String MAX_RESULTS = "maxResults";
+    private static String MARKET_IDS = "marketIds";
+    private static String MARKET_ID = "marketId";
+    private static String INSTRUCTIONS = "instructions";
+    private static String CUSTOMER_REFERENCE = "customerRef";
+    private static String INCLUDE_SETTLED_BETS = "includeSettledBets";
+    private static String INCLUDE_BSP_BETS = "includeBspBets";
+    private static String INCLUDE_ITEM_DESCRIPTION = "includeItemDescription";
+    private static String NET_OF_COMMISSION = "netOfCommission";
+    private static String FROM_CURRENCY = "fromCurrency";
+    private static String FROM = "from";
+    private static String TO = "to";
+    private static String AMOUNT = "amount";
+    private static String WALLET = "wallet";
+
 
     public BetfairClient(Exchange exchange, String appKey) {
         this.tracer = LogManager.getFormatterLogger("BetfairClient");
@@ -108,5 +170,27 @@ public class BetfairClient {
 
     public BetfairServerResponse<KeepAliveResponse> keepAlive() {
         return networkClient.keepAliveSynchronous();
+    }
+
+    public BetfairServerResponse<List<CompetitionResult>> listCompetitions(MarketFilter marketFilter) {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        return networkClient.Invoke(
+                new TypeToken<List<CompetitionResult>>() { },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_COMPETITIONS_METHOD,
+                args);
+    }
+
+    public BetfairServerResponse<List<EventResult>> listEvents(MarketFilter marketFilter) {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        return networkClient.Invoke(
+                new TypeToken<List<EventResult>>() { },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_EVENT_TYPES_METHOD,
+                args);
     }
 }
