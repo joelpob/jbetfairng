@@ -1,12 +1,9 @@
 package com.jbetfairng;
 
-import com.jbetfairng.entities.Competition;
-import com.jbetfairng.entities.CompetitionResult;
-import com.jbetfairng.entities.EventResult;
-import com.jbetfairng.entities.MarketFilter;
+import com.google.common.base.Optional;
+import com.jbetfairng.entities.*;
 import com.google.gson.Gson;
-import com.jbetfairng.enums.Endpoint;
-import com.jbetfairng.enums.Exchange;
+import com.jbetfairng.enums.*;
 import com.jbetfairng.exceptions.LoginException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +22,8 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.Set;
+
 import com.google.common.reflect.TypeToken;
 import com.google.common.reflect.TypeParameter;
 
@@ -183,6 +182,17 @@ public class BetfairClient {
                 args);
     }
 
+    public BetfairServerResponse<List<CountryCodeResult>> listCountries(MarketFilter marketFilter) {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        return networkClient.Invoke(
+                new TypeToken<List<CountryCodeResult>>() { },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_COUNTRIES_METHOD,
+                args);
+    }
+
     public BetfairServerResponse<List<EventResult>> listEvents(MarketFilter marketFilter) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
@@ -191,6 +201,35 @@ public class BetfairClient {
                 this.exchange,
                 Endpoint.Betting,
                 LIST_EVENT_TYPES_METHOD,
+                args);
+    }
+
+    public BetfairServerResponse<CurrentOrderSummaryReport> listCurrentOrders(
+            Set<String> betIds,
+            Set<String> marketIds,
+            OrderProjection orderProjection,
+            TimeRange placedDateRange,
+            TimeRange dateRange,
+            OrderBy orderBy,
+            SortDir sortDir,
+            Optional<Integer> fromRecord,
+            Optional<Integer> recordCount)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(BET_IDS, betIds);
+        args.put(MARKET_IDS, marketIds);
+        args.put(ORDER_PROJECTION, orderProjection);
+        args.put(PLACED_DATE_RANGE, placedDateRange);
+        args.put(DATE_RANGE, dateRange);
+        args.put(ORDER_BY, orderBy);
+        args.put(SORT_DIR, sortDir);
+        args.put(FROM_RECORD, fromRecord);
+        args.put(RECORD_COUNT, recordCount);
+        return networkClient.Invoke(
+                new TypeToken<CurrentOrderSummaryReport>() { },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_CURRENT_ORDERS_METHOD,
                 args);
     }
 }
