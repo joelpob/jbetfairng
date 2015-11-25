@@ -216,6 +216,44 @@ public class BetfairClient {
                 args);
     }
 
+    public BetfairServerResponse<List<MarketBook>> listMarketBook(
+            List<String> marketIds, 
+            PriceProjection priceProjection, 
+            OrderProjection orderProjection, 
+            MatchProjection matchProjection)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(MARKET_IDS, marketIds);
+        args.put(PRICE_PROJECTION, priceProjection);
+        args.put(ORDER_PROJECTION, orderProjection);
+        args.put(MATCH_PROJECTION, matchProjection);
+        return networkClient.Invoke(
+                new TypeToken<List<MarketBook>>() { },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_MARKET_BOOK_METHOD,
+                args);
+    }
+
+    public BetfairServerResponse<List<MarketCatalogue>> listMarketCatalogue(
+            MarketFilter marketFilter, 
+            Set<MarketProjection> marketProjections,
+            MarketSort sort, 
+            int maxResult)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        args.put(MARKET_PROJECTION, marketProjections);
+        args.put(SORT, sort);
+        args.put(MAX_RESULTS, maxResult);
+        return networkClient.Invoke(
+                new TypeToken<List<MarketCatalogue>>() { },
+                this.exchange, 
+                Endpoint.Betting,
+                LIST_MARKET_CATALOGUE_METHOD,
+                args);
+    }
+
     public BetfairServerResponse<CurrentOrderSummaryReport> listCurrentOrders(
             Set<String> betIds,
             Set<String> marketIds,

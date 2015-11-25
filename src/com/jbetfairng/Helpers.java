@@ -42,7 +42,7 @@ public class Helpers {
         marketFilter.setEventTypeIds(new HashSet<String>(Arrays.asList("7")));
         TimeRange timeRange = new TimeRange();
         timeRange.setFrom(DateTime.now().toDate());
-        timeRange.setTo(DateTime.now().plusDays(1).toDate());
+        timeRange.setTo(DateTime.now().plusDays(2).toDate());
         marketFilter.setMarketStartTime(timeRange);
 
         if (country != null)
