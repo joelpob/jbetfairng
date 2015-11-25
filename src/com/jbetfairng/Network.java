@@ -2,7 +2,7 @@ package com.jbetfairng;
 
 import com.google.common.reflect.TypeParameter;
 import com.google.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import com.jbetfairng.entities.EventResult;
 import com.jbetfairng.entities.EventType;
 import com.jbetfairng.enums.Endpoint;
@@ -85,7 +85,8 @@ public class Network {
         call.params = args;
         call.id = 1;
 
-        String requestData = new Gson().toJson(call);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+        String requestData = gson.toJson(call);
         String result = requestSync(
                 url,
                 requestData,
@@ -94,7 +95,7 @@ public class Network {
                 appKey,
                 sessionToken);
 
-        Gson gson = new Gson();
+        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
         Type underlyingType = new TypeToken<JsonResponse<T>>() { }
                 .where(new TypeParameter<T>() { }, elementClass)
@@ -132,7 +133,7 @@ public class Network {
                 this.appKey,
                 this.sessionToken);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
         Type typeToken = new TypeToken<KeepAliveResponse>() { }.getType();
         KeepAliveResponse entity = gson.fromJson(keepAliveResponse, typeToken);
         if (entity != null) {

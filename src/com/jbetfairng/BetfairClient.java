@@ -40,6 +40,7 @@ public class BetfairClient {
     private static String LIST_CURRENT_ORDERS_METHOD = "SportsAPING/v1.0/listCurrentOrders";
     private static String LIST_CLEARED_ORDERS_METHOD = "SportsAPING/v1.0/listClearedOrders";
     private static String LIST_EVENT_TYPES_METHOD = "SportsAPING/v1.0/listEventTypes";
+    private static String LIST_EVENTS_METHOD = "SportsAPING/v1.0/listEvents";
     private static String LIST_MARKET_CATALOGUE_METHOD = "SportsAPING/v1.0/listMarketCatalogue";
     private static String LIST_MARKET_BOOK_METHOD = "SportsAPING/v1.0/listMarketBook";
     private static String LIST_MARKET_PROFIT_AND_LOSS = "SportsAPING/v1.0/listMarketProfitAndLoss";
@@ -200,7 +201,18 @@ public class BetfairClient {
                 new TypeToken<List<EventResult>>() { },
                 this.exchange,
                 Endpoint.Betting,
-                LIST_EVENT_TYPES_METHOD,
+                LIST_EVENTS_METHOD,
+                args);
+    }
+
+    public BetfairServerResponse<List<EventTypeResult>> listEventTypes(MarketFilter marketFilter) { 
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        return networkClient.Invoke(
+                new TypeToken<List<EventTypeResult>>() {  }, 
+                this.exchange, 
+                Endpoint.Betting, 
+                LIST_EVENT_TYPES_METHOD, 
                 args);
     }
 
