@@ -273,6 +273,21 @@ public class BetfairClient {
                 args);
     }
 
+    public BetfairServerResponse<List<TimeRangeResult>> listTimeRanges(
+            MarketFilter marketFilter,
+            TimeGranularity timeGranularity) 
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        args.put(GRANULARITY, timeGranularity);
+        return networkClient.Invoke(
+                new TypeToken<List<TimeRangeResult>>() {}, 
+                this.exchange, 
+                Endpoint.Betting,
+                LIST_TIME_RANGES,
+                args);
+    }
+
     public BetfairServerResponse<CurrentOrderSummaryReport> listCurrentOrders(
             Set<String> betIds,
             Set<String> marketIds,
