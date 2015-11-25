@@ -288,6 +288,18 @@ public class BetfairClient {
                 args);
     }
 
+    public BetfairServerResponse<List<VenueResult>> listVenues(MarketFilter marketFilter)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FILTER, marketFilter);
+        return networkClient.Invoke(
+                new TypeToken<List<VenueResult>>() {},
+                this.exchange,
+                Endpoint.Betting,
+                LIST_VENUES,
+                args);
+    }
+
     public BetfairServerResponse<CurrentOrderSummaryReport> listCurrentOrders(
             Set<String> betIds,
             Set<String> marketIds,
