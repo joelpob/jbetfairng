@@ -254,6 +254,25 @@ public class BetfairClient {
                 args);
     }
 
+    public BetfairServerResponse<List<MarketProfitAndLoss>> listMarketProfitAndLoss(
+            List<String> marketIds,
+            Boolean includeSettledBets,
+            Boolean includeBsbBets, 
+            Boolean netOfComission)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(MARKET_IDS, marketIds);
+        args.put(INCLUDE_SETTLED_BETS, includeSettledBets);
+        args.put(INCLUDE_BSP_BETS, includeBsbBets);
+        args.put(NET_OF_COMMISSION, netOfComission);
+        return networkClient.Invoke(
+                new TypeToken<List<MarketProfitAndLoss>>() {},
+                this.exchange,
+                Endpoint.Betting,
+                LIST_MARKET_PROFIT_AND_LOSS,
+                args);
+    }
+
     public BetfairServerResponse<CurrentOrderSummaryReport> listCurrentOrders(
             Set<String> betIds,
             Set<String> marketIds,
