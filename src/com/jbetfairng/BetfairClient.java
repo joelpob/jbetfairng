@@ -232,4 +232,39 @@ public class BetfairClient {
                 LIST_CURRENT_ORDERS_METHOD,
                 args);
     }
+
+    public BetfairServerResponse<ClearedOrderSummaryReport> listClearedOrders(
+            BetStatus betStatus,
+            Set<String> eventTypeIds,
+            Set<String> eventIds,
+            Set<String> marketIds,
+            Set<String> runnerIds, 
+            Set<String> betIds,
+            Side side, 
+            TimeRange settledDateRange, 
+            GroupBy groupBy, 
+            Boolean includeItemDescription,
+            Integer fromRecord,
+            Integer recordCount)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(BET_STATUS, betStatus);
+        args.put(EVENT_TYPE_IDS, eventTypeIds);
+        args.put(EVENT_IDS, eventIds);
+        args.put(MARKET_IDS, marketIds);
+        args.put(BET_IDS, betIds);
+        args.put(SIDE, side);
+        args.put(DATE_RANGE, settledDateRange);
+        args.put(GROUP_BY, groupBy);
+        args.put(INCLUDE_ITEM_DESCRIPTION, includeItemDescription);
+        args.put(FROM_RECORD, fromRecord);
+        args.put(RECORD_COUNT, recordCount);
+
+        return networkClient.Invoke(
+                new TypeToken<ClearedOrderSummaryReport>() {  }, 
+                this.exchange, 
+                Endpoint.Betting,
+                LIST_CLEARED_ORDERS_METHOD, 
+                args);
+    }
 }

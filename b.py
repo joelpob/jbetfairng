@@ -3,11 +3,12 @@
 # super quick command line builds and source dir nav
 # hack hack hackity hack
 import sys
-import datetime
 import os
 import subprocess
 import shutil
 import shlex
+
+EDITOR = os.environ.get('EDITOR','vim')
 
 def run_command(command):
     p = subprocess.Popen(shlex.split(command),
@@ -53,9 +54,14 @@ def main(argv):
         print os.path.dirname(result)
         sys.exit(0)
 
-    if argv[1] == "vim":
+    if argv[1] == "main-file":
         result = find_main()
         print result
+        sys.exit(0)
+
+    if argv[1] == "vim":
+        result = find_main()
+        subprocess.call([EDITOR, result])
         sys.exit(0)
 
     # find all the jar files
@@ -137,9 +143,10 @@ def main(argv):
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
-        print "jhelp.py rootdir run-args"
-        print "jhelp.py main  ** finds the first directory with main() method"
-        print "jhelp.py vim   ** finds the first file with main() method"
+        print "b.py rootdir run-args  ** b.py . args"
+        print "b.py main  ** finds the first directory with main() method"
+        print "b.py main-file  ** finds the first file with main() method"
+        print "b.py vim  ** opens the first file with main() method in vim"
         sys.exit(1)
 
     main(sys.argv)
