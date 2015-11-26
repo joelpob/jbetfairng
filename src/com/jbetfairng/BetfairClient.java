@@ -52,6 +52,12 @@ public class BetfairClient {
     private static String REPLACE_ORDERS_METHOD = "SportsAPING/v1.0/replaceOrders";
     private static String UPDATE_ORDERS_METHOD = "SportsAPING/v1.0/updateOrders";
 
+	private static String GET_ACCOUNT_DETAILS = "AccountAPING/v1.0/getAccountDetails";
+    private static String GET_ACCOUNT_FUNDS = "AccountAPING/v1.0/getAccountFunds";
+    private static String GET_ACCOUNT_STATEMENT = "AccountAPING/v1.0/getAccountStatement";
+    private static String LIST_CURRENCY_RATES = "AccountAPING/v1.0/listCurrencyRates";
+    private static String TRANSFER_FUNDS = "AccountAPING/v1.0/transferFunds";
+
     private static String FILTER = "filter";
     private static String BET_IDS = "betIds";
     private static String RUNNER_IDS = "runnerIds";
@@ -362,5 +368,17 @@ public class BetfairClient {
                 Endpoint.Betting,
                 LIST_CLEARED_ORDERS_METHOD, 
                 args);
+    }
+
+    // Account API's
+    public BetfairServerResponse<AccountDetailsResponse> getAccountDetails()
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        return networkClient.Invoke(
+                new TypeToken<AccountDetailsResponse>() {},
+                this.exchange,
+                Endpoint.Account,
+                GET_ACCOUNT_DETAILS,
+				args);
     }
 }
