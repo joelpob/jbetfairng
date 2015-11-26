@@ -428,4 +428,18 @@ public class BetfairClient {
                 LIST_CURRENCY_RATES,
                 args);
     }
+
+    public BetfairServerResponse<TransferResponse> transferFunds(Wallet from, Wallet to, double amount)
+    {
+         HashMap<String, Object> args = new HashMap<String, Object>();
+         args.put(FROM, from);
+         args.put(TO, to);
+         args.put(AMOUNT, amount);
+         return networkClient.Invoke(
+                 new TypeToken<TransferResponse>() {},
+                 this.exchange,
+                 Endpoint.Account,
+                 TRANSFER_FUNDS,
+                 args);
+    }
 }
