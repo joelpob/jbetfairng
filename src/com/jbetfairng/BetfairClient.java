@@ -93,6 +93,8 @@ public class BetfairClient {
     private static String TO = "to";
     private static String AMOUNT = "amount";
     private static String WALLET = "wallet";
+    private static String ITEM_DATE_RANGE = "itemDateRange";
+    private static String INCLUDE_ITEM = "includeItem";
 
 
     public BetfairClient(Exchange exchange, String appKey) {
@@ -380,5 +382,38 @@ public class BetfairClient {
                 Endpoint.Account,
                 GET_ACCOUNT_DETAILS,
 				args);
+    }
+
+    public BetfairServerResponse<AccountFundsResponse> getAccountFunds(Wallet wallet)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(WALLET, wallet);
+        return networkClient.Invoke(
+                new TypeToken<AccountFundsResponse>() {},
+                this.exchange,
+                Endpoint.Account,
+                GET_ACCOUNT_FUNDS,
+                args);
+    }
+
+    public BetfairServerResponse<AccountStatementReport> getAccountStatement(
+            Integer fromRecord,
+            Integer recordCount,
+            TimeRange itemDateRange,
+            IncludeItem includeItem,
+            Wallet wallet)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FROM_RECORD, fromRecord);
+        args.put(RECORD_COUNT, recordCount);
+        args.put(ITEM_DATE_RANGE, itemDateRange);
+        args.put(INCLUDE_ITEM, includeItem);
+        args.put(WALLET, wallet);
+        return networkClient.Invoke(
+                new TypeToken<AccountStatementReport>() {}, 
+                this.exchange,
+                Endpoint.Account,
+                GET_ACCOUNT_STATEMENT,
+                args);
     }
 }
