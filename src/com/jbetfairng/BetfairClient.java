@@ -416,4 +416,16 @@ public class BetfairClient {
                 GET_ACCOUNT_STATEMENT,
                 args);
     }
+
+    public BetfairServerResponse<List<CurrencyRate>> listCurrencyRates(String fromCurrency)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(FROM_CURRENCY, fromCurrency);
+        return networkClient.Invoke(
+                new TypeToken<List<CurrencyRate>>() {},
+                this.exchange,
+                Endpoint.Account,
+                LIST_CURRENCY_RATES,
+                args);
+    }
 }
