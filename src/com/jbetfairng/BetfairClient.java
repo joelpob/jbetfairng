@@ -414,6 +414,20 @@ public class BetfairClient {
                  args);
     }
 
+    public BetfairServerResponse<UpdateExecutionReport> updateOrders(
+            String marketId,
+            List<UpdateInstruction> instructions,
+            String customerRef)
+    {
+         HashMap<String, Object> args = new HashMap<String, Object>();
+         return networkClient.Invoke(
+                 new TypeToken<UpdateExecutionReport>() {}, 
+                 this.exchange,
+                 Endpoint.Betting,
+                 UPDATE_ORDERS_METHOD,
+                 args);
+    }
+
 
     // Account API's
     public BetfairServerResponse<AccountDetailsResponse> getAccountDetails()
