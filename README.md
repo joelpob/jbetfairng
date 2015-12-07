@@ -12,7 +12,7 @@ BetfairClient client = new BetfairClient(Exchange.AUS, "ASDF1234qwerty");
 client.Login("client-2048.p12", "certpass", "username", "password");
 ```
 
-The "BetfairClient" class is where the magic happens:
+The "BetfairClient" class is where the magic happens. Be sure to import the Helpers class:
 
 ```java
 List<MarketCatalogue> marketCatalogue = client.listMarketCatalogue(
@@ -21,9 +21,9 @@ List<MarketCatalogue> marketCatalogue = client.listMarketCatalogue(
     MarketSort.FIRST_TO_START,
     15).getResponse();
 
-    for (MarketCatalogue c : marketCatalogue) { 
-        // ... do something
-    }
+for (MarketCatalogue c : marketCatalogue) { 
+    // ... print the available markets
+}
 
 List<String> marketIds = new ArrayList<String>();
 marketIds.add(marketCatalogue.get(0).getMarketId());    
@@ -34,7 +34,7 @@ List<MarketBook> marketBooks = client.listMarketBook(
     null).getResponse();
 
 for (MarketBook book : marketBooks) {
-    // ... print market book
+    // ... print the market book
 }
 ```
 
