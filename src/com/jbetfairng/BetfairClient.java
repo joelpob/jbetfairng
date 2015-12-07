@@ -372,6 +372,49 @@ public class BetfairClient {
                 args);
     }
 
+    public BetfairServerResponse<PlaceExecutionReport> placeOrders(
+            String marketId,
+            List<PlaceInstruction> placeInstructions,
+            String customerRef)
+    {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        return networkClient.Invoke(
+                new TypeToken<PlaceExecutionReport>() {},
+                this.exchange,
+                Endpoint.Betting,
+                PLACE_ORDERS_METHOD,
+                args);
+    }
+
+    public BetfairServerResponse<CancelExecutionReport> cancelOrders(
+            String marketId,
+            List<CancelInstruction> instructions,
+            String customerRef)
+    {
+         HashMap<String, Object> args = new HashMap<String, Object>();
+         return networkClient.Invoke(
+                 new TypeToken<CancelExecutionReport>() {},
+                 this.exchange,
+                 Endpoint.Betting,
+                 CANCEL_ORDERS_METHOD,
+                 args);
+    }
+
+    public BetfairServerResponse<ReplaceExecutionReport> replaceOrders(
+            String marketId,
+            List<ReplaceInstruction> instructions,
+            String customerRef)
+    {
+         HashMap<String, Object> args = new HashMap<String, Object>();
+         return networkClient.Invoke(
+                 new TypeToken<ReplaceExecutionReport>() {},
+                 this.exchange,
+                 Endpoint.Betting,
+                 REPLACE_ORDERS_METHOD,
+                 args);
+    }
+
+
     // Account API's
     public BetfairServerResponse<AccountDetailsResponse> getAccountDetails()
     {
