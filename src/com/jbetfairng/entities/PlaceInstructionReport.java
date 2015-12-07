@@ -8,7 +8,7 @@ import java.util.Date;
 public class PlaceInstructionReport {
 	private InstructionReportStatus status;
 	private InstructionReportErrorCode errorCode;
-	private PlaceInstruction instructionl;
+	private PlaceInstruction instruction;
 	private String betId;
 	private Date placedDate;
 	private double averagePriceMatched;
@@ -30,12 +30,12 @@ public class PlaceInstructionReport {
 		this.errorCode = errorCode;
 	}
 
-	public PlaceInstruction getInstructionl() {
-		return instructionl;
+	public PlaceInstruction getInstruction() {
+		return instruction;
 	}
 
-	public void setInstructionl(PlaceInstruction instructionl) {
-		this.instructionl = instructionl;
+	public void setInstruction(PlaceInstruction instruction) {
+		this.instruction = instruction;
 	}
 
 	public String getBetId() {

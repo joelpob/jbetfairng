@@ -378,6 +378,10 @@ public class BetfairClient {
             String customerRef)
     {
         HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(MARKET_ID, marketId);
+        args.put(INSTRUCTIONS, placeInstructions);
+        args.put(CUSTOMER_REFERENCE, customerRef);
+
         return networkClient.Invoke(
                 new TypeToken<PlaceExecutionReport>() {},
                 this.exchange,
@@ -391,13 +395,17 @@ public class BetfairClient {
             List<CancelInstruction> instructions,
             String customerRef)
     {
-         HashMap<String, Object> args = new HashMap<String, Object>();
-         return networkClient.Invoke(
-                 new TypeToken<CancelExecutionReport>() {},
-                 this.exchange,
-                 Endpoint.Betting,
-                 CANCEL_ORDERS_METHOD,
-                 args);
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(MARKET_ID, marketId);
+        args.put(INSTRUCTIONS, instructions);
+        args.put(CUSTOMER_REFERENCE, customerRef);
+
+        return networkClient.Invoke(
+                new TypeToken<CancelExecutionReport>() {},
+                this.exchange,
+                Endpoint.Betting,
+                CANCEL_ORDERS_METHOD,
+                args);
     }
 
     public BetfairServerResponse<ReplaceExecutionReport> replaceOrders(
@@ -405,13 +413,17 @@ public class BetfairClient {
             List<ReplaceInstruction> instructions,
             String customerRef)
     {
-         HashMap<String, Object> args = new HashMap<String, Object>();
-         return networkClient.Invoke(
-                 new TypeToken<ReplaceExecutionReport>() {},
-                 this.exchange,
-                 Endpoint.Betting,
-                 REPLACE_ORDERS_METHOD,
-                 args);
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(MARKET_ID, marketId);
+        args.put(INSTRUCTIONS, instructions);
+        args.put(CUSTOMER_REFERENCE, customerRef);
+
+        return networkClient.Invoke(
+                new TypeToken<ReplaceExecutionReport>() {},
+                this.exchange,
+                Endpoint.Betting,
+                REPLACE_ORDERS_METHOD,
+                args);
     }
 
     public BetfairServerResponse<UpdateExecutionReport> updateOrders(
@@ -419,15 +431,18 @@ public class BetfairClient {
             List<UpdateInstruction> instructions,
             String customerRef)
     {
-         HashMap<String, Object> args = new HashMap<String, Object>();
-         return networkClient.Invoke(
-                 new TypeToken<UpdateExecutionReport>() {}, 
-                 this.exchange,
-                 Endpoint.Betting,
-                 UPDATE_ORDERS_METHOD,
-                 args);
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put(MARKET_ID, marketId);
+        args.put(INSTRUCTIONS, instructions);
+        args.put(CUSTOMER_REFERENCE, customerRef);
+        
+        return networkClient.Invoke(
+                new TypeToken<UpdateExecutionReport>() {}, 
+                this.exchange,
+                Endpoint.Betting,
+                UPDATE_ORDERS_METHOD,
+                args);
     }
-
 
     // Account API's
     public BetfairServerResponse<AccountDetailsResponse> getAccountDetails()
