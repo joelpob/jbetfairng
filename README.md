@@ -9,7 +9,7 @@ To login to Betfair using this library, you'll need both a) a self signed certif
 
 ```java
 BetfairClient client = new BetfairClient(Exchange.AUS, "ASDF1234qwerty");
-client.Login("client-2048.p12", "certpass", "username", "password");
+client.login("client-2048.p12", "certpass", "username", "password");
 ```
 
 The "BetfairClient" class is where the magic happens. Be sure to import the Helpers class:
