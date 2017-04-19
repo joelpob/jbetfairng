@@ -132,7 +132,13 @@ public class BetfairClient {
             sslContext.init(kms, null, new SecureRandom());
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-            URL url = new URL("https://identitysso-api.betfair.com/api/certlogin");
+            String urlString;
+            if (exchange == Exchange.RO)
+                urlString = "https://identitysso.betfair.ro/api/certlogin";
+            else
+                urlString = "https://identitysso.betfair.com/api/certlogin";
+
+            URL url = new URL(urlString);
 
             String postData = String.format("username=%s&password=%s", username, password);
 

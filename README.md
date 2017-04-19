@@ -43,5 +43,5 @@ Taking pull requests. Enjoy.
 [sample code]:https://github.com/betfair/API-NG-sample-code/tree/master/java/ng
 [betfairng]:https://github.com/joelpob/betfairng
 [API-NG]:https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Getting+Started+with+API-NG
-[described here]:https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+(bot)+login
-[directions here]:https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys
+[described here]:http://docs.developer.betfair.com/docs/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+%28bot%29+login
+[directions here]:http://docs.developer.betfair.com/docs/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys
