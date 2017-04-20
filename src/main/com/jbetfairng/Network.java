@@ -3,8 +3,6 @@ package com.jbetfairng;
 import com.google.common.reflect.TypeParameter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jbetfairng.entities.EventResult;
-import com.jbetfairng.entities.EventType;
 import com.jbetfairng.enums.Endpoint;
 import com.jbetfairng.enums.Exchange;
 import org.apache.http.Header;
@@ -15,6 +13,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
@@ -33,10 +32,9 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+
 import com.google.common.reflect.TypeToken;
-import com.google.common.reflect.TypeParameter;
 
 public class Network {
 
@@ -48,8 +46,7 @@ public class Network {
     public Network(
             String appKey,
             String sessionToken,
-            Boolean gzipCompress)
-    {
+            Boolean gzipCompress) {
         this.appKey = appKey;
         this.sessionToken = sessionToken;
         this.gzipCompress = gzipCompress;
@@ -61,15 +58,14 @@ public class Network {
             Exchange exchange,
             Endpoint endpoint,
             String method,
-            Map<String, Object> args)
-    {
+            Map<String, Object> args) {
         if (Helpers.isNullOrWhitespace(method)) throw new IllegalArgumentException(method);
         tracer.debug("%s, %s", formatEndpoint(endpoint), method);
 
         DateTime requestStart = DateTime.now();
         long requestStartMillis = System.currentTimeMillis();
 
-        String url = "";
+        String url;
         if (exchange == Exchange.AUS)
             url = "https://api-au.betfair.com/exchange";
         else
@@ -97,9 +93,7 @@ public class Network {
 
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
-        Type underlyingType = new TypeToken<JsonResponse<T>>() { }
-                .where(new TypeParameter<T>() { }, elementClass)
-                .getType();
+        Type underlyingType = new TypeToken<JsonResponse<T>>() {}.where(new TypeParameter<T>() {}, elementClass).getType();
 
         JsonResponse<T> entity = gson.fromJson(result, underlyingType);
         // should be returning Observable<Betfair...> here.
@@ -111,9 +105,8 @@ public class Network {
                     (System.currentTimeMillis() - requestStartMillis) / 1000,
                     entity.hasError);
             return response;
-        }
-        else
-            return new BetfairServerResponse<T>(
+        } else
+            return new BetfairServerResponse<>(
                     null,
                     DateTime.now(),
                     requestStart,
@@ -134,7 +127,8 @@ public class Network {
                 this.sessionToken);
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-        Type typeToken = new TypeToken<KeepAliveResponse>() { }.getType();
+        Type typeToken = new TypeToken<KeepAliveResponse>() {
+        }.getType();
         KeepAliveResponse entity = gson.fromJson(keepAliveResponse, typeToken);
         if (entity != null) {
             BetfairServerResponse<KeepAliveResponse> response = new BetfairServerResponse<>(
@@ -144,8 +138,7 @@ public class Network {
                     (System.currentTimeMillis() - requestStartMillis) / 1000,
                     Boolean.parseBoolean(entity.error));
             return response;
-        }
-        else {
+        } else {
             KeepAliveResponse response = new KeepAliveResponse();
             response.error = "Keep Alive request failed.";
             return new BetfairServerResponse<>(
@@ -163,8 +156,7 @@ public class Network {
             ContentType contentType,
             String acceptType,
             String appKey,
-            String sessionToken)
-    {
+            String sessionToken) {
         Header[] headers = {
                 new BasicHeader("X-Application", appKey),
                 new BasicHeader("X-Authentication", sessionToken),
@@ -185,9 +177,7 @@ public class Network {
 
             String json = EntityUtils.toString(response.getEntity(), "UTF-8");
             return json;
-        }
-        catch (IOException exception)
-        {
+        } catch (IOException exception) {
             return null;
         }
     }
@@ -217,16 +207,16 @@ public class Network {
                 .build();
 
         return ObservableHttp.createRequest(HttpAsyncMethods.createPost(url, requestPostData, contentType), httpclient)
-            .toObservable()
-            .flatMap(new Func1<ObservableHttpResponse, Observable<String>>() {
-                public Observable<String> call(ObservableHttpResponse response) {
-                    return response.getContent().map(new Func1<byte[], String>() {
-                        public String call(byte[] bb) {
-                            return new String(bb);
-                        }
-                    });
-                }
-            });
+                .toObservable()
+                .flatMap(new Func1<ObservableHttpResponse, Observable<String>>() {
+                    public Observable<String> call(ObservableHttpResponse response) {
+                        return response.getContent().map(new Func1<byte[], String>() {
+                            public String call(byte[] bb) {
+                                return new String(bb);
+                            }
+                        });
+                    }
+                });
     }
 
 

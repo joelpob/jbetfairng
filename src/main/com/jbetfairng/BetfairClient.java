@@ -1,8 +1,10 @@
 package com.jbetfairng;
 
+
 import com.google.common.base.Optional;
-import com.jbetfairng.entities.*;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.jbetfairng.entities.*;
 import com.jbetfairng.enums.*;
 import com.jbetfairng.exceptions.LoginException;
 import org.apache.logging.log4j.LogManager;
@@ -21,11 +23,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.util.Map;
 import java.util.Set;
 
-import com.google.common.reflect.TypeToken;
-import com.google.common.reflect.TypeParameter;
 
 public class BetfairClient {
 
@@ -52,7 +51,7 @@ public class BetfairClient {
     private static String REPLACE_ORDERS_METHOD = "SportsAPING/v1.0/replaceOrders";
     private static String UPDATE_ORDERS_METHOD = "SportsAPING/v1.0/updateOrders";
 
-	private static String GET_ACCOUNT_DETAILS = "AccountAPING/v1.0/getAccountDetails";
+    private static String GET_ACCOUNT_DETAILS = "AccountAPING/v1.0/getAccountDetails";
     private static String GET_ACCOUNT_FUNDS = "AccountAPING/v1.0/getAccountFunds";
     private static String GET_ACCOUNT_STATEMENT = "AccountAPING/v1.0/getAccountStatement";
     private static String LIST_CURRENCY_RATES = "AccountAPING/v1.0/listCurrencyRates";
@@ -133,7 +132,13 @@ public class BetfairClient {
             sslContext.init(kms, null, new SecureRandom());
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-            URL url = new URL("https://identitysso-api.betfair.com/api/certlogin");
+            String urlString;
+            if (exchange == Exchange.RO)
+                urlString = "https://identitysso.betfair.ro/api/certlogin";
+            else
+                urlString = "https://identitysso.betfair.com/api/certlogin";
+
+            URL url = new URL(urlString);
 
             String postData = String.format("username=%s&password=%s", username, password);
 
@@ -163,8 +168,7 @@ public class BetfairClient {
                 this.sessionToken = loginResult.sessionToken;
                 this.networkClient = new Network(this.appKey, this.sessionToken, false);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         } catch (Exception ex) {
@@ -172,7 +176,8 @@ public class BetfairClient {
         } finally {
             try {
                 keyStream.close();
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
     }
 
@@ -183,19 +188,18 @@ public class BetfairClient {
     public BetfairServerResponse<List<CompetitionResult>> listCompetitions(MarketFilter marketFilter) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
-        return networkClient.Invoke(
-                new TypeToken<List<CompetitionResult>>() { },
-                this.exchange,
-                Endpoint.Betting,
-                LIST_COMPETITIONS_METHOD,
-                args);
+
+        return networkClient.Invoke(new TypeToken<List<CompetitionResult>>() {
+                                    }, this.exchange,
+                Endpoint.Betting, LIST_COMPETITIONS_METHOD, args);
     }
 
     public BetfairServerResponse<List<CountryCodeResult>> listCountries(MarketFilter marketFilter) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<CountryCodeResult>>() { },
+                new TypeToken<List<CountryCodeResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_COUNTRIES_METHOD,
@@ -206,37 +210,39 @@ public class BetfairClient {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<EventResult>>() { },
+                new TypeToken<List<EventResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_EVENTS_METHOD,
                 args);
     }
 
-    public BetfairServerResponse<List<EventTypeResult>> listEventTypes(MarketFilter marketFilter) { 
+    public BetfairServerResponse<List<EventTypeResult>> listEventTypes(MarketFilter marketFilter) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<EventTypeResult>>() {  }, 
-                this.exchange, 
-                Endpoint.Betting, 
-                LIST_EVENT_TYPES_METHOD, 
+                new TypeToken<List<EventTypeResult>>() {
+                },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_EVENT_TYPES_METHOD,
                 args);
     }
 
     public BetfairServerResponse<List<MarketBook>> listMarketBook(
-            List<String> marketIds, 
-            PriceProjection priceProjection, 
-            OrderProjection orderProjection, 
-            MatchProjection matchProjection)
-    {
+            List<String> marketIds,
+            PriceProjection priceProjection,
+            OrderProjection orderProjection,
+            MatchProjection matchProjection) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(MARKET_IDS, marketIds);
         args.put(PRICE_PROJECTION, priceProjection);
         args.put(ORDER_PROJECTION, orderProjection);
         args.put(MATCH_PROJECTION, matchProjection);
         return networkClient.Invoke(
-                new TypeToken<List<MarketBook>>() { },
+                new TypeToken<List<MarketBook>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_MARKET_BOOK_METHOD,
@@ -244,19 +250,19 @@ public class BetfairClient {
     }
 
     public BetfairServerResponse<List<MarketCatalogue>> listMarketCatalogue(
-            MarketFilter marketFilter, 
+            MarketFilter marketFilter,
             Set<MarketProjection> marketProjections,
-            MarketSort sort, 
-            int maxResult)
-    {
+            MarketSort sort,
+            int maxResult) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
         args.put(MARKET_PROJECTION, marketProjections);
         args.put(SORT, sort);
         args.put(MAX_RESULTS, maxResult);
         return networkClient.Invoke(
-                new TypeToken<List<MarketCatalogue>>() { },
-                this.exchange, 
+                new TypeToken<List<MarketCatalogue>>() {
+                },
+                this.exchange,
                 Endpoint.Betting,
                 LIST_MARKET_CATALOGUE_METHOD,
                 args);
@@ -265,16 +271,16 @@ public class BetfairClient {
     public BetfairServerResponse<List<MarketProfitAndLoss>> listMarketProfitAndLoss(
             List<String> marketIds,
             Boolean includeSettledBets,
-            Boolean includeBsbBets, 
-            Boolean netOfComission)
-    {
+            Boolean includeBsbBets,
+            Boolean netOfComission) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(MARKET_IDS, marketIds);
         args.put(INCLUDE_SETTLED_BETS, includeSettledBets);
         args.put(INCLUDE_BSP_BETS, includeBsbBets);
         args.put(NET_OF_COMMISSION, netOfComission);
         return networkClient.Invoke(
-                new TypeToken<List<MarketProfitAndLoss>>() {},
+                new TypeToken<List<MarketProfitAndLoss>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_MARKET_PROFIT_AND_LOSS,
@@ -283,25 +289,25 @@ public class BetfairClient {
 
     public BetfairServerResponse<List<TimeRangeResult>> listTimeRanges(
             MarketFilter marketFilter,
-            TimeGranularity timeGranularity) 
-    {
+            TimeGranularity timeGranularity) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
         args.put(GRANULARITY, timeGranularity);
         return networkClient.Invoke(
-                new TypeToken<List<TimeRangeResult>>() {}, 
-                this.exchange, 
+                new TypeToken<List<TimeRangeResult>>() {
+                },
+                this.exchange,
                 Endpoint.Betting,
                 LIST_TIME_RANGES,
                 args);
     }
 
-    public BetfairServerResponse<List<VenueResult>> listVenues(MarketFilter marketFilter)
-    {
+    public BetfairServerResponse<List<VenueResult>> listVenues(MarketFilter marketFilter) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<VenueResult>>() {},
+                new TypeToken<List<VenueResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_VENUES,
@@ -317,8 +323,7 @@ public class BetfairClient {
             OrderBy orderBy,
             SortDir sortDir,
             Optional<Integer> fromRecord,
-            Optional<Integer> recordCount)
-    {
+            Optional<Integer> recordCount) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(BET_IDS, betIds);
         args.put(MARKET_IDS, marketIds);
@@ -330,7 +335,8 @@ public class BetfairClient {
         args.put(FROM_RECORD, fromRecord);
         args.put(RECORD_COUNT, recordCount);
         return networkClient.Invoke(
-                new TypeToken<CurrentOrderSummaryReport>() { },
+                new TypeToken<CurrentOrderSummaryReport>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_CURRENT_ORDERS_METHOD,
@@ -342,15 +348,14 @@ public class BetfairClient {
             Set<String> eventTypeIds,
             Set<String> eventIds,
             Set<String> marketIds,
-            Set<String> runnerIds, 
+            Set<String> runnerIds,
             Set<String> betIds,
-            Side side, 
-            TimeRange settledDateRange, 
-            GroupBy groupBy, 
+            Side side,
+            TimeRange settledDateRange,
+            GroupBy groupBy,
             Boolean includeItemDescription,
             Integer fromRecord,
-            Integer recordCount)
-    {
+            Integer recordCount) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(BET_STATUS, betStatus);
         args.put(EVENT_TYPE_IDS, eventTypeIds);
@@ -365,25 +370,26 @@ public class BetfairClient {
         args.put(RECORD_COUNT, recordCount);
 
         return networkClient.Invoke(
-                new TypeToken<ClearedOrderSummaryReport>() {  }, 
-                this.exchange, 
+                new TypeToken<ClearedOrderSummaryReport>() {
+                },
+                this.exchange,
                 Endpoint.Betting,
-                LIST_CLEARED_ORDERS_METHOD, 
+                LIST_CLEARED_ORDERS_METHOD,
                 args);
     }
 
     public BetfairServerResponse<PlaceExecutionReport> placeOrders(
             String marketId,
             List<PlaceInstruction> placeInstructions,
-            String customerRef)
-    {
+            String customerRef) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(MARKET_ID, marketId);
         args.put(INSTRUCTIONS, placeInstructions);
         args.put(CUSTOMER_REFERENCE, customerRef);
 
         return networkClient.Invoke(
-                new TypeToken<PlaceExecutionReport>() {},
+                new TypeToken<PlaceExecutionReport>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 PLACE_ORDERS_METHOD,
@@ -393,15 +399,15 @@ public class BetfairClient {
     public BetfairServerResponse<CancelExecutionReport> cancelOrders(
             String marketId,
             List<CancelInstruction> instructions,
-            String customerRef)
-    {
+            String customerRef) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(MARKET_ID, marketId);
         args.put(INSTRUCTIONS, instructions);
         args.put(CUSTOMER_REFERENCE, customerRef);
 
         return networkClient.Invoke(
-                new TypeToken<CancelExecutionReport>() {},
+                new TypeToken<CancelExecutionReport>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 CANCEL_ORDERS_METHOD,
@@ -411,15 +417,15 @@ public class BetfairClient {
     public BetfairServerResponse<ReplaceExecutionReport> replaceOrders(
             String marketId,
             List<ReplaceInstruction> instructions,
-            String customerRef)
-    {
+            String customerRef) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(MARKET_ID, marketId);
         args.put(INSTRUCTIONS, instructions);
         args.put(CUSTOMER_REFERENCE, customerRef);
 
         return networkClient.Invoke(
-                new TypeToken<ReplaceExecutionReport>() {},
+                new TypeToken<ReplaceExecutionReport>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 REPLACE_ORDERS_METHOD,
@@ -429,15 +435,15 @@ public class BetfairClient {
     public BetfairServerResponse<UpdateExecutionReport> updateOrders(
             String marketId,
             List<UpdateInstruction> instructions,
-            String customerRef)
-    {
+            String customerRef) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(MARKET_ID, marketId);
         args.put(INSTRUCTIONS, instructions);
         args.put(CUSTOMER_REFERENCE, customerRef);
-        
+
         return networkClient.Invoke(
-                new TypeToken<UpdateExecutionReport>() {}, 
+                new TypeToken<UpdateExecutionReport>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 UPDATE_ORDERS_METHOD,
@@ -445,23 +451,23 @@ public class BetfairClient {
     }
 
     // Account API's
-    public BetfairServerResponse<AccountDetailsResponse> getAccountDetails()
-    {
+    public BetfairServerResponse<AccountDetailsResponse> getAccountDetails() {
         HashMap<String, Object> args = new HashMap<String, Object>();
         return networkClient.Invoke(
-                new TypeToken<AccountDetailsResponse>() {},
+                new TypeToken<AccountDetailsResponse>() {
+                },
                 this.exchange,
                 Endpoint.Account,
                 GET_ACCOUNT_DETAILS,
-				args);
+                args);
     }
 
-    public BetfairServerResponse<AccountFundsResponse> getAccountFunds(Wallet wallet)
-    {
+    public BetfairServerResponse<AccountFundsResponse> getAccountFunds(Wallet wallet) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(WALLET, wallet);
         return networkClient.Invoke(
-                new TypeToken<AccountFundsResponse>() {},
+                new TypeToken<AccountFundsResponse>() {
+                },
                 this.exchange,
                 Endpoint.Account,
                 GET_ACCOUNT_FUNDS,
@@ -473,8 +479,7 @@ public class BetfairClient {
             Integer recordCount,
             TimeRange itemDateRange,
             IncludeItem includeItem,
-            Wallet wallet)
-    {
+            Wallet wallet) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FROM_RECORD, fromRecord);
         args.put(RECORD_COUNT, recordCount);
@@ -482,36 +487,38 @@ public class BetfairClient {
         args.put(INCLUDE_ITEM, includeItem);
         args.put(WALLET, wallet);
         return networkClient.Invoke(
-                new TypeToken<AccountStatementReport>() {}, 
+                new TypeToken<AccountStatementReport>() {
+                },
                 this.exchange,
                 Endpoint.Account,
                 GET_ACCOUNT_STATEMENT,
                 args);
     }
 
-    public BetfairServerResponse<List<CurrencyRate>> listCurrencyRates(String fromCurrency)
-    {
+    public BetfairServerResponse<List<CurrencyRate>> listCurrencyRates(String fromCurrency) {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put(FROM_CURRENCY, fromCurrency);
         return networkClient.Invoke(
-                new TypeToken<List<CurrencyRate>>() {},
+                new TypeToken<List<CurrencyRate>>() {
+                },
                 this.exchange,
                 Endpoint.Account,
                 LIST_CURRENCY_RATES,
                 args);
     }
 
-    public BetfairServerResponse<TransferResponse> transferFunds(Wallet from, Wallet to, double amount)
-    {
-         HashMap<String, Object> args = new HashMap<String, Object>();
-         args.put(FROM, from);
-         args.put(TO, to);
-         args.put(AMOUNT, amount);
-         return networkClient.Invoke(
-                 new TypeToken<TransferResponse>() {},
-                 this.exchange,
-                 Endpoint.Account,
-                 TRANSFER_FUNDS,
-                 args);
+    public BetfairServerResponse<TransferResponse> transferFunds(Wallet from, Wallet to, double amount) {
+        HashMap<String, Object> args = new HashMap<>();
+        args.put(FROM, from);
+        args.put(TO, to);
+        args.put(AMOUNT, amount);
+        return networkClient.Invoke(
+                new TypeToken<TransferResponse>() {
+                },
+                this.exchange,
+                Endpoint.Account,
+                TRANSFER_FUNDS,
+                args);
     }
+
 }
