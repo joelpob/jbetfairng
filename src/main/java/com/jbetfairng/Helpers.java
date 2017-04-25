@@ -8,6 +8,7 @@ import com.jbetfairng.enums.PriceData;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class Helpers {
         return s == null || isWhitespace(s);
 
     }
+
     private static boolean isWhitespace(String s) {
         int length = s.length();
         if (length > 0) {
@@ -33,21 +35,44 @@ public class Helpers {
         return false;
     }
 
+    public static MarketFilter soccerMatchFilter(String country) {
+        MarketFilter marketFilter = new MarketFilter();
+        marketFilter.setEventTypeIds(new HashSet<>(Collections.singleton("1")));
+
+        if (country != null)
+            marketFilter.setMarketCountries(new HashSet<>(Arrays.asList(country)));
+
+        return marketFilter;
+    }
+
+    public static Set<MarketProjection> soccerMatchProjection() {
+        Set<MarketProjection> marketProjections = new HashSet<>();
+        marketProjections.add(MarketProjection.COMPETITION);
+        marketProjections.add(MarketProjection.RUNNER_METADATA);
+        marketProjections.add(MarketProjection.MARKET_DESCRIPTION);
+        marketProjections.add(MarketProjection.EVENT);
+        marketProjections.add(MarketProjection.EVENT_TYPE);
+
+        return marketProjections;
+    }
+
+
     public static MarketFilter horseRaceFilter() {
         return horseRaceFilter(null);
     }
 
+
     public static MarketFilter horseRaceFilter(String country) {
         MarketFilter marketFilter = new MarketFilter();
-        marketFilter.setEventTypeIds(new HashSet<String>(Arrays.asList("7")));
+        marketFilter.setEventTypeIds(new HashSet<>(Collections.singleton("7")));
         TimeRange timeRange = new TimeRange();
         timeRange.setFrom(DateTime.now().toDate());
         timeRange.setTo(DateTime.now().plusDays(2).toDate());
         marketFilter.setMarketStartTime(timeRange);
 
         if (country != null)
-            marketFilter.setMarketCountries(new HashSet<String>(Arrays.asList(country)));
-        marketFilter.setMarketTypeCodes(new HashSet<String>(Arrays.asList("WIN")));
+            marketFilter.setMarketCountries(new HashSet<>(Arrays.asList(country)));
+        marketFilter.setMarketTypeCodes(new HashSet<>(Arrays.asList("WIN")));
 
         return marketFilter;
     }

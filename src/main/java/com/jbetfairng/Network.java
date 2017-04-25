@@ -166,7 +166,7 @@ public class Network {
         };
 
         CloseableHttpClient client = HttpClientBuilder.create()
-                .setDefaultHeaders(new ArrayList<Header>(Arrays.asList(headers)))
+                .setDefaultHeaders(new ArrayList<>(Arrays.asList(headers)))
                 .build();
         try {
             StringEntity entity = new StringEntity(requestPostData);
