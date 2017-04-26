@@ -1,6 +1,5 @@
 package com.jbetfairng.entities;
 
-import com.jbetfairng.entities.EventType;
 
 public class EventTypeResult {
 	private EventType eventType ; 

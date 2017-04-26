@@ -8,6 +8,7 @@ import com.jbetfairng.entities.*;
 import com.jbetfairng.enums.*;
 import com.jbetfairng.exceptions.LoginException;
 import com.jbetfairng.util.Constants;
+import com.jbetfairng.util.Helpers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -194,7 +195,8 @@ public class BetfairClient {
     public BetfairServerResponse<List<CompetitionResult>> listCompetitions(MarketFilter marketFilter) {
         HashMap<String, Object> args = new HashMap<>();
         args.put(FILTER, marketFilter);
-        return networkClient.Invoke(new TypeToken<List<CompetitionResult>>() { }, this.exchange,
+        return networkClient.Invoke(new TypeToken<List<CompetitionResult>>() {
+                                    }, this.exchange,
                 Endpoint.Betting, LIST_COMPETITIONS_METHOD, args);
     }
 
@@ -202,7 +204,8 @@ public class BetfairClient {
         HashMap<String, Object> args = new HashMap<>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<CountryCodeResult>>() {},
+                new TypeToken<List<CountryCodeResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_COUNTRIES_METHOD,
@@ -213,7 +216,8 @@ public class BetfairClient {
         HashMap<String, Object> args = new HashMap<>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<EventResult>>() { },
+                new TypeToken<List<EventResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_EVENTS_METHOD,
@@ -224,7 +228,8 @@ public class BetfairClient {
         HashMap<String, Object> args = new HashMap<>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<EventTypeResult>>() {},
+                new TypeToken<List<EventTypeResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_EVENT_TYPES_METHOD,
@@ -242,7 +247,8 @@ public class BetfairClient {
         args.put(ORDER_PROJECTION, orderProjection);
         args.put(MATCH_PROJECTION, matchProjection);
         return networkClient.Invoke(
-                new TypeToken<List<MarketBook>>() {},
+                new TypeToken<List<MarketBook>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_MARKET_BOOK_METHOD,
@@ -265,6 +271,18 @@ public class BetfairClient {
                 this.exchange,
                 Endpoint.Betting,
                 LIST_MARKET_CATALOGUE_METHOD,
+                args);
+    }
+
+    public BetfairServerResponse<List<MarketTypeResult>> listMarketTypes( MarketFilter marketFilter) {
+        HashMap<String, Object> args = new HashMap<>();
+        args.put(FILTER, marketFilter);
+        return networkClient.Invoke(
+                new TypeToken<List<MarketTypeResult>>() {
+                },
+                this.exchange,
+                Endpoint.Betting,
+                LIST_MARKET_TYPES,
                 args);
     }
 
@@ -294,7 +312,8 @@ public class BetfairClient {
         args.put(FILTER, marketFilter);
         args.put(GRANULARITY, timeGranularity);
         return networkClient.Invoke(
-                new TypeToken<List<TimeRangeResult>>() {},
+                new TypeToken<List<TimeRangeResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_TIME_RANGES,
@@ -305,7 +324,8 @@ public class BetfairClient {
         HashMap<String, Object> args = new HashMap<>();
         args.put(FILTER, marketFilter);
         return networkClient.Invoke(
-                new TypeToken<List<VenueResult>>() {},
+                new TypeToken<List<VenueResult>>() {
+                },
                 this.exchange,
                 Endpoint.Betting,
                 LIST_VENUES,

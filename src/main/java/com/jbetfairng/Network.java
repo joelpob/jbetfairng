@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jbetfairng.enums.Endpoint;
 import com.jbetfairng.enums.Exchange;
+import com.jbetfairng.util.Helpers;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;

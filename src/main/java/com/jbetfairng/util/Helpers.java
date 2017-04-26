@@ -1,9 +1,10 @@
-package com.jbetfairng;
+package com.jbetfairng.util;
 
 import com.jbetfairng.entities.MarketFilter;
 import com.jbetfairng.entities.PriceProjection;
 import com.jbetfairng.entities.TimeRange;
 import com.jbetfairng.enums.MarketProjection;
+import com.jbetfairng.enums.MarketType;
 import com.jbetfairng.enums.PriceData;
 import org.joda.time.DateTime;
 
@@ -35,9 +36,27 @@ public class Helpers {
         return false;
     }
 
-    public static MarketFilter soccerMatchFilter(String country) {
+    public static MarketFilter soccerMatchFilter(String country, TimeRange timeRange, Set<String> marketTypeCodes) {
         MarketFilter marketFilter = new MarketFilter();
+        //EventTypeId 1= SOCCER
         marketFilter.setEventTypeIds(new HashSet<>(Collections.singleton("1")));
+
+        if (marketTypeCodes == null) {
+            // default to Match odds (1X2)
+            marketFilter.setMarketTypeCodes(Collections.singleton(MarketType.MATCH_ODDS.toString()));
+        } else {
+            marketFilter.setMarketTypeCodes(marketTypeCodes);
+        }
+
+
+        if (timeRange == null) {
+            TimeRange localTimeRange = new TimeRange();
+            localTimeRange.setFrom(DateTime.now().toDate());
+            localTimeRange.setTo(DateTime.now().plusDays(3).toDate());
+            marketFilter.setMarketStartTime(localTimeRange);
+        } else {
+            marketFilter.setMarketStartTime(timeRange);
+        }
 
         if (country != null)
             marketFilter.setMarketCountries(new HashSet<>(Arrays.asList(country)));
