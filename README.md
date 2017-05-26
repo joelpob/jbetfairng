@@ -38,10 +38,32 @@ for (MarketBook book : marketBooks) {
 }
 ```
 
-Taking pull requests. Enjoy.
+Or for soccer 
+```java
+ List<MarketCatalogue> marketCatalogueList = client.listMarketCatalogue(
+                Helpers.soccerMatchFilter(null),
+                Helpers.soccerMatchProjection(),
+                MarketSort.FIRST_TO_START, 20).getResponse();
 
+        for (MarketCatalogue marketCatalogue : marketCatalogueList) {
+            printMarketCatalogue(marketCatalogue);
+        }
+        
+        
+ private void printMarketCatalogue(MarketCatalogue mk) {
+        System.out.println("Market Name: " + mk.getMarketName() + "; Id: " + mk.getMarketId()
+                + ";Competition: " + mk.getCompetition() + "; Time: " + mk.getDescription().getMarketTime() + "\n");
+
+        List<RunnerCatalog> runners = mk.getRunners();
+        if (runners != null) {
+            for (RunnerCatalog rCat : runners) {
+                System.out.println("Runner Name: " + rCat.getRunnerName() + "; Selection Id: " + rCat.getSelectionId() + "\n");
+            }
+        }
+    }        
+```
 [sample code]:https://github.com/betfair/API-NG-sample-code/tree/master/java/ng
 [betfairng]:https://github.com/joelpob/betfairng
-[API-NG]:https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Getting+Started+with+API-NG
+[API-NG]:http://docs.developer.betfair.com/docs/display/1smk3cen4v3lu3yomq5qye0ni/Getting+Started
 [described here]:http://docs.developer.betfair.com/docs/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+%28bot%29+login
 [directions here]:http://docs.developer.betfair.com/docs/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys
