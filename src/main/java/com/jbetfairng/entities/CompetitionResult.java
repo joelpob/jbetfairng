@@ -17,8 +17,15 @@ public class CompetitionResult {
         this.marketCount = marketCount;
     }
 
+    public String getCompetitionRegion() {
+        return competitionRegion;
+    }
+
+    public void setCompetitionRegion(String competitionRegion) {
+        this.competitionRegion = competitionRegion;
+    }
+
     private Competition competition;
     private int marketCount;
+    private String competitionRegion;
 }
-
-
