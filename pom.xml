@@ -86,6 +86,7 @@
         <outputDirectory>target/classes</outputDirectory>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test</testSourceDirectory>
 
         <plugins>
             <plugin>
