@@ -75,6 +75,16 @@ public class Helpers {
         return marketProjections;
     }
 
+    public static PriceProjection soccerPriceProjection() {
+
+        PriceProjection priceProjection = new PriceProjection();
+        Set<PriceData> priceData = new HashSet<>();
+        priceData.add(PriceData.EX_BEST_OFFERS);
+        priceProjection.setPriceData(priceData);
+
+        return priceProjection;
+    }
+
 
     public static MarketFilter horseRaceFilter() {
         return horseRaceFilter(null);
