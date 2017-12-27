@@ -6,9 +6,6 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="trace" additivity="false">
-            <AppenderRef ref="console"/>
-        </Root>
         <Root level="info" additivity="false">
             <AppenderRef ref="console"/>
         </Root>
