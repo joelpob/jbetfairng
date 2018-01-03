@@ -22,7 +22,7 @@ public class AppConfig {
     @Value("${appKey}")
     String appKey;
 
-    @Value("${userName}")
+    @Value("${user}")
     String userName;
 
     @Value("${password}")

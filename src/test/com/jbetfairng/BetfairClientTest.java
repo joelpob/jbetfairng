@@ -7,6 +7,7 @@ import com.jbetfairng.exceptions.LoginException;
 import com.jbetfairng.util.Helpers;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class BetfairClientTest {
 
     }
 
+    @Ignore
     @Test
     public void listMarketCatalogue() {
 
@@ -76,6 +78,7 @@ public class BetfairClientTest {
         }
     }
 
+    @Ignore
     @Test
     public void placeBets() {
 
