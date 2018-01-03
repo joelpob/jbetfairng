@@ -5,6 +5,7 @@ import com.jbetfairng.entities.*;
 import com.jbetfairng.enums.*;
 import com.jbetfairng.exceptions.LoginException;
 import com.jbetfairng.util.Helpers;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,8 +53,12 @@ public class BetfairClientTest {
     @Test
     public void listMarketCatalogue() {
 
+        TimeRange localTimeRange = new TimeRange();
+        localTimeRange.setFrom(DateTime.now().toDate());
+        localTimeRange.setTo(DateTime.now().plusDays(90).toDate());
+
         List<MarketCatalogue> marketCatalogueList = client.listMarketCatalogue(
-                Helpers.soccerMatchFilter(null, null, marketTypeCodes),
+                Helpers.soccerMatchFilter(null, localTimeRange, marketTypeCodes, "FCSB"),
                 Helpers.soccerMatchProjection(),
                 MarketSort.FIRST_TO_START, 40).getResponse();
 
@@ -75,7 +80,7 @@ public class BetfairClientTest {
     public void placeBets() {
 
         List<MarketCatalogue> marketCatalogueList = client.listMarketCatalogue(
-                Helpers.soccerMatchFilter(null, null, marketTypeCodes),
+                Helpers.soccerMatchFilter(null, null, marketTypeCodes, null),
                 Helpers.soccerMatchProjection(),
                 MarketSort.FIRST_TO_START, 5).getResponse();
 

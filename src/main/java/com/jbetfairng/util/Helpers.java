@@ -61,7 +61,7 @@ public class Helpers {
         return 0;
     }
 
-    public static MarketFilter soccerMatchFilter(String country, TimeRange timeRange, Set<String> marketTypeCodes) {
+    public static MarketFilter soccerMatchFilter(String country, TimeRange timeRange, Set<String> marketTypeCodes, String textQuery) {
         MarketFilter marketFilter = new MarketFilter();
         //EventTypeId 1= SOCCER
         marketFilter.setEventTypeIds(new HashSet<>(Collections.singleton("1")));
@@ -83,9 +83,13 @@ public class Helpers {
             marketFilter.setMarketStartTime(timeRange);
         }
 
-        if (country != null)
-            marketFilter.setMarketCountries(new HashSet<>(Arrays.asList(country)));
+        if (country != null) {
+            marketFilter.setMarketCountries(new HashSet<>(Collections.singletonList(country)));
+        }
 
+        if (!isNullOrEmpty(textQuery)) {
+            marketFilter.setTextQuery(textQuery);
+        }
         return marketFilter;
     }
 
