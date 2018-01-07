@@ -85,6 +85,7 @@ public class BetfairClient {
     private static String MARKET_ID = "marketId";
     private static String INSTRUCTIONS = "instructions";
     private static String CUSTOMER_REFERENCE = "customerRef";
+    private static String MARKET_VERSION = "marketVersion";
     private static String INCLUDE_SETTLED_BETS = "includeSettledBets";
     private static String INCLUDE_BSP_BETS = "includeBspBets";
     private static String INCLUDE_ITEM_DESCRIPTION = "includeItemDescription";
@@ -399,11 +400,12 @@ public class BetfairClient {
     public BetfairServerResponse<PlaceExecutionReport> placeOrders(
             String marketId,
             List<PlaceInstruction> placeInstructions,
-            String customerRef) {
+            String customerRef, long marketVersion) {
         HashMap<String, Object> args = new HashMap<>();
         args.put(MARKET_ID, marketId);
         args.put(INSTRUCTIONS, placeInstructions);
         args.put(CUSTOMER_REFERENCE, customerRef);
+        args.put(MARKET_VERSION, new MarketVersion(marketVersion));
 
         return networkClient.Invoke(
                 new TypeToken<PlaceExecutionReport>() {

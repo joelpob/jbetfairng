@@ -8,28 +8,19 @@ import com.jbetfairng.enums.Exchange;
 import com.jbetfairng.util.Helpers;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.nio.client.methods.HttpAsyncMethods;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import rx.Observable;
-import rx.apache.http.ObservableHttp;
-import rx.apache.http.ObservableHttpResponse;
-import rx.functions.Func1;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -183,6 +174,7 @@ public class Network {
         }
     }
 
+    /*
     private Observable<String> request(
             String url,
             String requestPostData,
@@ -218,8 +210,7 @@ public class Network {
                         });
                     }
                 });
-    }
-
+    }*/
 
     private String formatEndpoint(Endpoint endpoint) {
         return endpoint == Endpoint.Betting ? "betting" : "account";

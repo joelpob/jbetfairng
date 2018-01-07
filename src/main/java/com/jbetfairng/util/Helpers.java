@@ -36,7 +36,32 @@ public class Helpers {
         return false;
     }
 
-    public static MarketFilter soccerMatchFilter(String country, TimeRange timeRange, Set<String> marketTypeCodes) {
+    public static double getMaxBetIncrement(double currentPrice) {
+        if (currentPrice >= 1.01 && currentPrice < 2) {
+            return currentPrice + 0.01;
+        } else if (currentPrice >= 2 && currentPrice < 3) {
+            return currentPrice + 0.02;
+        } else if (currentPrice >= 3 && currentPrice < 4) {
+            return currentPrice + 0.05;
+        } else if (currentPrice >= 4 && currentPrice < 6) {
+            return currentPrice + 0.1;
+        } else if (currentPrice >= 6 && currentPrice < 10) {
+            return currentPrice + 0.2;
+        } else if (currentPrice >= 10 && currentPrice < 20) {
+            return currentPrice + 0.5;
+        } else if (currentPrice >= 20 && currentPrice < 30) {
+            return currentPrice + 1;
+        } else if (currentPrice >= 30 && currentPrice < 50) {
+            return currentPrice + 2;
+        } else if (currentPrice >= 50 && currentPrice < 100) {
+            return currentPrice + 5;
+        } else if (currentPrice >= 100 && currentPrice < 1000) {
+            return currentPrice + 10;
+        }
+        return 0;
+    }
+
+    public static MarketFilter soccerMatchFilter(String country, TimeRange timeRange, Set<String> marketTypeCodes, String textQuery) {
         MarketFilter marketFilter = new MarketFilter();
         //EventTypeId 1= SOCCER
         marketFilter.setEventTypeIds(new HashSet<>(Collections.singleton("1")));
@@ -58,9 +83,13 @@ public class Helpers {
             marketFilter.setMarketStartTime(timeRange);
         }
 
-        if (country != null)
-            marketFilter.setMarketCountries(new HashSet<>(Arrays.asList(country)));
+        if (country != null) {
+            marketFilter.setMarketCountries(new HashSet<>(Collections.singletonList(country)));
+        }
 
+        if (!isNullOrEmpty(textQuery)) {
+            marketFilter.setTextQuery(textQuery);
+        }
         return marketFilter;
     }
 
@@ -73,6 +102,16 @@ public class Helpers {
         marketProjections.add(MarketProjection.EVENT_TYPE);
 
         return marketProjections;
+    }
+
+    public static PriceProjection soccerPriceProjection() {
+
+        PriceProjection priceProjection = new PriceProjection();
+        Set<PriceData> priceData = new HashSet<>();
+        priceData.add(PriceData.EX_BEST_OFFERS);
+        priceProjection.setPriceData(priceData);
+
+        return priceProjection;
     }
 
 

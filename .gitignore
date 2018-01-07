@@ -39,3 +39,5 @@ certs/
 src/com/jbetfairng/Main.java
 Main.java
 tags
+src/main/resources/application.properties
+src/test/resources/
