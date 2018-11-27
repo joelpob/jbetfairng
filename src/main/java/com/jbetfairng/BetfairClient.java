@@ -105,9 +105,11 @@ public class BetfairClient {
     private static HashMap<Exchange, String> identityEndpoints = new HashMap<>();
 
     static {
-        identityEndpoints.put(Exchange.RO, "https://identitysso.betfair.ro/api/certlogin");
-        identityEndpoints.put(Exchange.UK, "https://identitysso.betfair.com/api/certlogin");
-        identityEndpoints.put(Exchange.AUS, "https://identitysso.betfair.com/api/certlogin");
+        identityEndpoints.put(Exchange.RO, "https://identitysso-cert.betfair.ro/api/certlogin");
+        identityEndpoints.put(Exchange.UK, "https://identitysso-cert.betfair.com/api/certlogin");
+        identityEndpoints.put(Exchange.AUS, "https://identitysso-cert.betfair.com/api/certlogin");
+        identityEndpoints.put(Exchange.IT, "https://identitysso-cert.betfair.it/api/certlogin");
+        identityEndpoints.put(Exchange.ES, "https://identitysso-cert.betfair.es/api/certlogin");
     }
 
     public BetfairClient(Exchange exchange, String appKey) {
